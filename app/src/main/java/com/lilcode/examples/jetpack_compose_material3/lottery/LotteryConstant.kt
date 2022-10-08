@@ -5,6 +5,7 @@ import kotlin.random.Random
 
 
 const val goldenDp = 1.618
+const val pickButtonBottomMargin = goldenDp.times(30)
 
 val colorMap = mutableMapOf(
     1 to Color(0x95FF0000),

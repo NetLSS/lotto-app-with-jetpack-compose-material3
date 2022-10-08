@@ -34,6 +34,7 @@ import com.lilcode.examples.jetpack_compose_material3.MainActivity.RouteName.mai
 import com.lilcode.examples.jetpack_compose_material3.lottery.LotteryHelper
 import com.lilcode.examples.jetpack_compose_material3.lottery.goldenDp
 import com.lilcode.examples.jetpack_compose_material3.lottery.lotteryColor
+import com.lilcode.examples.jetpack_compose_material3.lottery.pickButtonBottomMargin
 import com.lilcode.examples.jetpack_compose_material3.ui.modifier.simpleVerticalScrollbar
 import com.lilcode.examples.jetpack_compose_material3.ui.theme.Jetpackcomposematerial3Theme
 import kotlinx.coroutines.launch
@@ -111,8 +112,8 @@ fun MainHomeNavHost(
 @Composable
 fun MainHome(onNavigateTo720: () -> Unit, onNavigateTo645: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize().padding(bottom = pickButtonBottomMargin.dp),
+        verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
@@ -165,7 +166,7 @@ fun Lottery720(onNavigateToHome: () -> Unit) {
             modifier = Modifier.constrainAs(btnPick720) {
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
-                bottom.linkTo(parent.bottom, margin = 64.dp)
+                bottom.linkTo(parent.bottom, margin = pickButtonBottomMargin.dp)
             },
             onClick = {
                 lottery720items = lottery720items + LotteryHelper.get720Numbers()
@@ -245,7 +246,7 @@ fun Lottery645(onNavigateToHome: () -> Unit) {
             modifier = Modifier.constrainAs(btnPick645) {
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
-                bottom.linkTo(parent.bottom, margin = 64.dp)
+                bottom.linkTo(parent.bottom, margin = pickButtonBottomMargin.dp)
             },
             onClick = {
                 lottery645items = lottery645items + LotteryHelper.get645Numbers()
@@ -300,7 +301,7 @@ fun Lottery645item(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         data645.run {
-            numbers.forEach {
+            numbers.sorted().forEach {
                 Avatar(
                     modifier = Modifier.padding(start = (goldenDp * 2).dp),
                     color = it.lotteryColor,
