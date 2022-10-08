@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -89,8 +90,20 @@ fun MainHomeNavHost(
                 }
             )
         }
-        composable(lottery720RouteName) { Lottery720() }
-        composable(lottery645RouteName) { Lottery645() }
+        composable(lottery720RouteName) {
+            Lottery720(onNavigateToHome = {
+                navController.navigate(
+                    mainHomeRouteName
+                )
+            })
+        }
+        composable(lottery645RouteName) {
+            Lottery645(onNavigateToHome = {
+                navController.navigate(
+                    mainHomeRouteName
+                )
+            })
+        }
         /*...*/
     }
 }
@@ -117,7 +130,7 @@ fun MainHome(onNavigateTo720: () -> Unit, onNavigateTo645: () -> Unit) {
 }
 
 @Composable
-fun Lottery720() {
+fun Lottery720(onNavigateToHome: () -> Unit) {
     var lottery720items by remember {
         mutableStateOf(listOf<LotteryHelper.Data720>())
     }
@@ -128,7 +141,7 @@ fun Lottery720() {
     ConstraintLayout(
         modifier = Modifier.fillMaxSize(),
     ) {
-        val (lc720List, btnPick720, btnRefresh720) = createRefs()
+        val (lc720List, btnPick720, btnRefresh720, btnGoHome) = createRefs()
         LazyColumn(
             state = scrollState,
             modifier = Modifier
@@ -179,12 +192,25 @@ fun Lottery720() {
             }
         }
 
+        Button(
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .constrainAs(btnGoHome) {
+                    end.linkTo(btnPick720.start)
+                    top.linkTo(btnPick720.top)
+                    bottom.linkTo(btnPick720.bottom)
+                },
+            onClick = onNavigateToHome
+        ) {
+            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back to home")
+        }
+
     }
 }
 
 
 @Composable
-fun Lottery645() {
+fun Lottery645(onNavigateToHome: () -> Unit) {
     var lottery645items by remember {
         mutableStateOf(listOf<LotteryHelper.Data645>())
     }
@@ -195,7 +221,7 @@ fun Lottery645() {
     ConstraintLayout(
         modifier = Modifier.fillMaxSize(),
     ) {
-        val (lc645List, btnPick645, btnRefresh645) = createRefs()
+        val (lc645List, btnPick645, btnRefresh645, btnGoHome) = createRefs()
         LazyColumn(
             state = scrollState,
             modifier = Modifier
@@ -227,7 +253,7 @@ fun Lottery645() {
                     scrollState.animateScrollToItem(lottery645items.lastIndex)
                 }
             }) {
-            Text(text = "연금 복권 추첨")
+            Text(text = "로또 복권 추첨")
         }
 
         if (lottery645items.isNotEmpty()) {
@@ -244,6 +270,19 @@ fun Lottery645() {
                 }) {
                 Icon(imageVector = Icons.Filled.Refresh, contentDescription = "refresh")
             }
+        }
+
+        Button(
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .constrainAs(btnGoHome) {
+                    end.linkTo(btnPick645.start)
+                    top.linkTo(btnPick645.top)
+                    bottom.linkTo(btnPick645.bottom)
+                },
+            onClick = onNavigateToHome
+        ) {
+            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back to home")
         }
 
     }
