@@ -3,7 +3,9 @@ package com.lilcode.examples.jetpack_compose_material3
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
@@ -11,9 +13,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.lilcode.examples.jetpack_compose_material3.lottery.LotteryHelper
 import com.lilcode.examples.jetpack_compose_material3.ui.theme.Jetpackcomposematerial3Theme
 
@@ -40,12 +43,20 @@ fun Greeting() {
         mutableStateOf(listOf<LotteryHelper.Data720>())
     }
 
-    Column(
+
+    ConstraintLayout(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val (lc720List, btnPick720) = createRefs()
         LazyColumn(
+            modifier = Modifier
+                .constrainAs(lc720List) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(btnPick720.top)
+                }
+                .padding(top = 64.dp, bottom = 32.dp)
         ) {
             itemsIndexed(
                 lottery720items
@@ -55,6 +66,11 @@ fun Greeting() {
         }
 
         Button(
+            modifier = Modifier.constrainAs(btnPick720) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom, margin = 64.dp)
+            },
             onClick = {
                 lottery720items = lottery720items + LotteryHelper.get720Numbers()
             }) {
