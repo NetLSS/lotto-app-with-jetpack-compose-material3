@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
@@ -24,7 +25,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.lilcode.examples.jetpack_compose_material3.lottery.LotteryHelper
 import com.lilcode.examples.jetpack_compose_material3.lottery.goldenDp
 import com.lilcode.examples.jetpack_compose_material3.lottery.lotteryColor
+import com.lilcode.examples.jetpack_compose_material3.ui.modifier.simpleVerticalScrollbar
 import com.lilcode.examples.jetpack_compose_material3.ui.theme.Jetpackcomposematerial3Theme
+import kotlinx.coroutines.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,11 +52,15 @@ fun Greeting() {
         mutableStateOf(listOf<LotteryHelper.Data720>())
     }
 
+    val scrollState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
     ConstraintLayout(
         modifier = Modifier.fillMaxSize(),
     ) {
         val (lc720List, btnPick720, btnRefresh720) = createRefs()
         LazyColumn(
+            state = scrollState,
             modifier = Modifier
                 .constrainAs(lc720List) {
                     top.linkTo(parent.top)
@@ -62,6 +69,7 @@ fun Greeting() {
                     bottom.linkTo(btnPick720.top)
                 }
                 .padding(top = 64.dp, bottom = 32.dp)
+                .simpleVerticalScrollbar(state = scrollState)
         ) {
             itemsIndexed(
                 lottery720items
@@ -78,6 +86,9 @@ fun Greeting() {
             },
             onClick = {
                 lottery720items = lottery720items + LotteryHelper.get720Numbers()
+                coroutineScope.launch {
+                    scrollState.animateScrollToItem(lottery720items.lastIndex)
+                }
             }) {
             Text(text = "연금 복권 추첨")
         }
@@ -155,3 +166,4 @@ fun DefaultPreview() {
         Greeting()
     }
 }
+
