@@ -13,6 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * cf. [original](https://stackoverflow.com/questions/66341823/jetpack-compose-scrollbars)
+ */
 @Composable
 fun Modifier.simpleVerticalScrollbar(
     state: LazyListState,

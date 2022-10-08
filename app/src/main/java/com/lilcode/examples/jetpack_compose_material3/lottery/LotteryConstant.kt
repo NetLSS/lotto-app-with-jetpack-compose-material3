@@ -1,11 +1,12 @@
 package com.lilcode.examples.jetpack_compose_material3.lottery
 
 import androidx.compose.ui.graphics.Color
+import kotlin.random.Random
 
 
 const val goldenDp = 1.618
 
-val colorMap = mapOf(
+val colorMap = mutableMapOf(
     1 to Color(0x95FF0000),
     2 to Color(0x95FF8500),
     3 to Color(0x959C7501),
@@ -16,4 +17,8 @@ val colorMap = mapOf(
     8 to Color(0x950073FF),
     9 to Color(0x956200FF),
     0 to Color(0x95BB00FF)
-)
+).apply {
+    (10..45).forEach {
+        this[it] = Color(Random.nextInt())
+    }
+}

@@ -24,6 +24,27 @@ object LotteryHelper {
         )
     }
 
+    fun get645Numbers(): Data645 {
+        val numbers = MutableList(45) { it + 1 }
+
+        val luckyNumbers = mutableListOf<Int>()
+
+        repeat(6) {
+            repeat(7) {
+                numbers.shuffle()
+            }
+            val luckyNumber = numbers.random()
+            numbers.remove(luckyNumber)
+            luckyNumbers.add(luckyNumber)
+        }
+
+        return Data645(luckyNumbers)
+    }
+
+    data class Data645(
+        val numbers: List<Int>
+    )
+
     data class Data720(
         val groupNumber: Int,
         val numbers: List<Int>
@@ -31,4 +52,7 @@ object LotteryHelper {
 
     val defaultData720
         get() = Data720(1, listOf(1, 2, 3, 4, 5, 6))
+
+    val defaultData645
+        get() = Data645(listOf(1, 2, 3, 4, 5, 6))
 }
