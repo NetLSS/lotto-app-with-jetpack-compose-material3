@@ -22,32 +22,80 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.lilcode.examples.jetpack_compose_material3.MainActivity.RouteName.lottery720RouteName
+import com.lilcode.examples.jetpack_compose_material3.MainActivity.RouteName.mainHomeRouteName
 import com.lilcode.examples.jetpack_compose_material3.lottery.LotteryHelper
 import com.lilcode.examples.jetpack_compose_material3.lottery.goldenDp
 import com.lilcode.examples.jetpack_compose_material3.lottery.lotteryColor
 import com.lilcode.examples.jetpack_compose_material3.ui.modifier.simpleVerticalScrollbar
 import com.lilcode.examples.jetpack_compose_material3.ui.theme.Jetpackcomposematerial3Theme
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    companion object RouteName {
+        const val mainHomeRouteName = "mainHome"
+        const val lottery720RouteName = "lottery720"
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val navController = rememberNavController()
             Jetpackcomposematerial3Theme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting()
+
+                Scaffold(
+                    bottomBar = {
+
+                    }
+                ) { innerPadding ->
+                    MainHomeNavHost(
+                        Modifier.padding(innerPadding),
+                        navController,
+                        mainHomeRouteName
+                    )
                 }
+
             }
         }
     }
 }
 
 @Composable
-fun Greeting() {
+fun MainHomeNavHost(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+    startDestination: String = mainHomeRouteName
+) {
+    NavHost(
+        modifier = modifier,
+        navController = navController, startDestination = startDestination
+    ) {
+        composable(mainHomeRouteName) {
+            MainHome(onNavigateTo720 = {
+                navController.navigate(lottery720RouteName)
+            })
+        }
+        composable(lottery720RouteName) { Lottery720() }
+        /*...*/
+    }
+}
+
+@Composable
+fun MainHome(onNavigateTo720: () -> Unit) {
+        Button(
+            onClick = onNavigateTo720) {
+            Text(text = "연금복권 추첨하기")
+        }
+}
+
+@Composable
+fun Lottery720() {
     var lottery720items by remember {
         mutableStateOf(listOf<LotteryHelper.Data720>())
     }
@@ -163,7 +211,7 @@ fun Avatar(
 @Composable
 fun DefaultPreview() {
     Jetpackcomposematerial3Theme {
-        Greeting()
+//        Lottery720()
     }
 }
 
