@@ -8,10 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,7 +46,7 @@ fun Greeting() {
     ConstraintLayout(
         modifier = Modifier.fillMaxSize(),
     ) {
-        val (lc720List, btnPick720) = createRefs()
+        val (lc720List, btnPick720, btnRefresh720) = createRefs()
         LazyColumn(
             modifier = Modifier
                 .constrainAs(lc720List) {
@@ -65,6 +64,7 @@ fun Greeting() {
             }
         }
 
+
         Button(
             modifier = Modifier.constrainAs(btnPick720) {
                 start.linkTo(parent.start)
@@ -76,6 +76,23 @@ fun Greeting() {
             }) {
             Text(text = "연금 복권 추첨")
         }
+
+        if (lottery720items.isNotEmpty()) {
+            Button(
+                modifier = Modifier.padding(start = 8.dp)
+                    .constrainAs(btnRefresh720) {
+                        start.linkTo(btnPick720.end)
+                        top.linkTo(btnPick720.top)
+                        bottom.linkTo(btnPick720.bottom)
+                    },
+                onClick = {
+                    lottery720items = listOf()
+                }) {
+                Icon(imageVector = Icons.Filled.Refresh, contentDescription = "refresh")
+            }
+        }
+
+
     }
 }
 
