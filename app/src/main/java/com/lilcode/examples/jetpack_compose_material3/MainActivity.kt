@@ -25,7 +25,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.lilcode.examples.jetpack_compose_material3.MainActivity.RouteName.lottery720RouteName
 import com.lilcode.examples.jetpack_compose_material3.MainActivity.RouteName.mainHomeRouteName
