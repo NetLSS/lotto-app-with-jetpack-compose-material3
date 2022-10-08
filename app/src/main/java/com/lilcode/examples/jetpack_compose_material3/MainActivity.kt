@@ -36,32 +36,33 @@ import com.lilcode.examples.jetpack_compose_material3.ui.modifier.simpleVertical
 import com.lilcode.examples.jetpack_compose_material3.ui.theme.Jetpackcomposematerial3Theme
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
     companion object RouteName {
         const val mainHomeRouteName = "mainHome"
         const val lottery720RouteName = "lottery720"
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
-            Jetpackcomposematerial3Theme {
+            LotteryApp()
+        }
+    }
+}
 
-                Scaffold(
-                    bottomBar = {
-
-                    }
-                ) { innerPadding ->
-                    MainHomeNavHost(
-                        Modifier.padding(innerPadding),
-                        navController,
-                        mainHomeRouteName
-                    )
-                }
+@ExperimentalMaterial3Api
+@Composable
+fun LotteryApp() {
+    Jetpackcomposematerial3Theme {
+        Scaffold(
+            bottomBar = {
 
             }
+        ) { innerPadding ->
+            MainHomeNavHost(
+                Modifier.padding(innerPadding)
+            )
         }
     }
 }
@@ -88,10 +89,17 @@ fun MainHomeNavHost(
 
 @Composable
 fun MainHome(onNavigateTo720: () -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Button(
-            onClick = onNavigateTo720) {
+            onClick = onNavigateTo720
+        ) {
             Text(text = "연금복권 추첨하기")
         }
+    }
 }
 
 @Composable
