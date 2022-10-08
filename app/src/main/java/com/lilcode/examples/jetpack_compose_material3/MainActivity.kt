@@ -3,20 +3,27 @@ package com.lilcode.examples.jetpack_compose_material3
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.lilcode.examples.jetpack_compose_material3.lottery.LotteryHelper
+import com.lilcode.examples.jetpack_compose_material3.lottery.goldenDp
+import com.lilcode.examples.jetpack_compose_material3.lottery.lotteryColor
 import com.lilcode.examples.jetpack_compose_material3.ui.theme.Jetpackcomposematerial3Theme
 
 class MainActivity : ComponentActivity() {
@@ -42,7 +49,6 @@ fun Greeting() {
         mutableStateOf(listOf<LotteryHelper.Data720>())
     }
 
-
     ConstraintLayout(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -64,7 +70,6 @@ fun Greeting() {
             }
         }
 
-
         Button(
             modifier = Modifier.constrainAs(btnPick720) {
                 start.linkTo(parent.start)
@@ -79,7 +84,8 @@ fun Greeting() {
 
         if (lottery720items.isNotEmpty()) {
             Button(
-                modifier = Modifier.padding(start = 8.dp)
+                modifier = Modifier
+                    .padding(start = 8.dp)
                     .constrainAs(btnRefresh720) {
                         start.linkTo(btnPick720.end)
                         top.linkTo(btnPick720.top)
@@ -92,23 +98,53 @@ fun Greeting() {
             }
         }
 
-
     }
 }
+
 
 @Preview(name = "lottery720item")
 @Composable
 fun Lottery720item(
     data720: LotteryHelper.Data720 = LotteryHelper.defaultData720
 ) {
-    Row() {
+    Row(
+        modifier = Modifier
+            .padding((goldenDp * 10).dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         data720.run {
-            Text(text = "$groupNumber 조")
+            Avatar(
+                color = groupNumber.lotteryColor,
+                text = "${groupNumber}조",
+                fontWeight = Bold
+            )
             numbers.forEach {
-                Text(text = " $it")
+                Avatar(
+                    modifier = Modifier.padding(start = (goldenDp * 2).dp),
+                    color = it.lotteryColor,
+                    text = "$it",
+                    fontWeight = Bold
+                )
             }
         }
+    }
+}
 
+@Composable
+fun Avatar(
+    modifier: Modifier = Modifier,
+    color: Color,
+    text: String,
+    fontWeight: FontWeight? = null
+) {
+    Box(
+        modifier = modifier
+            .size((goldenDp * 20).dp)
+            .clip(CircleShape)
+            .background(color = color),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = text, color = Color.White, fontWeight = fontWeight)
     }
 }
 
