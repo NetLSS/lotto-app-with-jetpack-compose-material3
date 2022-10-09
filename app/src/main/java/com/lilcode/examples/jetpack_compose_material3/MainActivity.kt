@@ -38,6 +38,7 @@ import com.lilcode.examples.jetpack_compose_material3.lottery.goldenDp
 import com.lilcode.examples.jetpack_compose_material3.lottery.lotteryColor
 import com.lilcode.examples.jetpack_compose_material3.lottery.pickButtonBottomMargin
 import com.lilcode.examples.jetpack_compose_material3.ui.modifier.simpleVerticalScrollbar
+import com.lilcode.examples.jetpack_compose_material3.ui.popup.PopupWindowDialog
 import com.lilcode.examples.jetpack_compose_material3.ui.theme.Jetpackcomposematerial3Theme
 import com.lilcode.examples.jetpack_compose_material3.viewmodel.LotteryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -398,6 +399,7 @@ fun Avatar(
 fun DefaultPreview() {
     Jetpackcomposematerial3Theme {
 //        Lottery720()
+        PopupWindowDialog()
     }
 }
 
