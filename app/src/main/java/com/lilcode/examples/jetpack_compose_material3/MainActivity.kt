@@ -1,5 +1,6 @@
 package com.lilcode.examples.jetpack_compose_material3
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
@@ -37,6 +39,7 @@ import com.lilcode.examples.jetpack_compose_material3.lottery.LotteryHelper
 import com.lilcode.examples.jetpack_compose_material3.lottery.goldenDp
 import com.lilcode.examples.jetpack_compose_material3.lottery.lotteryColor
 import com.lilcode.examples.jetpack_compose_material3.lottery.pickButtonBottomMargin
+import com.lilcode.examples.jetpack_compose_material3.ui.function.BackPressHandler
 import com.lilcode.examples.jetpack_compose_material3.ui.modifier.simpleVerticalScrollbar
 import com.lilcode.examples.jetpack_compose_material3.ui.popup.PopupWindowDialog
 import com.lilcode.examples.jetpack_compose_material3.ui.theme.Jetpackcomposematerial3Theme
@@ -94,10 +97,14 @@ fun MainHomeNavHost(
         composable(mainHomeRouteName) {
             MainHome(
                 onNavigateTo720 = {
-                    navController.navigate(lottery720RouteName)
+                    navController.navigate(lottery720RouteName){
+                        launchSingleTop = true
+                    }
                 },
                 onNavigateTo645 = {
-                    navController.navigate(lottery645RouteName)
+                    navController.navigate(lottery645RouteName){
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -127,6 +134,13 @@ fun MainHomeNavHost(
 
 @Composable
 fun MainHome(onNavigateTo720: () -> Unit, onNavigateTo645: () -> Unit) {
+
+//    val activity = LocalContext.current as? Activity
+//
+//    BackPressHandler {
+//        activity?.finish()
+//    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
