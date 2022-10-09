@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
         const val lottery645RouteName = "lottery645"
     }
 
-    val lotteryViewModel by viewModels<LotteryViewModel>()
+    private val lotteryViewModel by viewModels<LotteryViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,11 +111,14 @@ fun MainHomeNavHost(
             )
         }
         composable(lottery645RouteName) {
-            Lottery645(onNavigateToHome = {
-                navController.navigate(
-                    mainHomeRouteName
-                )
-            })
+            Lottery645(
+                onNavigateToHome = {
+                    navController.navigate(
+                        mainHomeRouteName
+                    )
+                },
+                viewModel = viewModel
+            )
         }
         /*...*/
     }
@@ -161,7 +164,7 @@ fun Lottery720(onNavigateToHome: () -> Unit, viewModel: LotteryViewModel) {
 //        mutableStateOf(listOf<LotteryHelper.Data720>())
 //    }
 
-    var lottery720items = viewModel.lottery720liveData.observeAsState().value ?: emptyList()
+    val lottery720items = viewModel.lottery720liveData.observeAsState().value ?: emptyList()
 
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -214,7 +217,7 @@ fun Lottery720(onNavigateToHome: () -> Unit, viewModel: LotteryViewModel) {
                         bottom.linkTo(btnPick720.bottom)
                     },
                 onClick = {
-                    lottery720items = listOf()
+                    viewModel.updateLottery720liveData(emptyList())
                 }) {
                 Icon(imageVector = Icons.Filled.Refresh, contentDescription = "refresh")
             }
@@ -238,10 +241,8 @@ fun Lottery720(onNavigateToHome: () -> Unit, viewModel: LotteryViewModel) {
 
 
 @Composable
-fun Lottery645(onNavigateToHome: () -> Unit) {
-    var lottery645items by remember {
-        mutableStateOf(listOf<LotteryHelper.Data645>())
-    }
+fun Lottery645(onNavigateToHome: () -> Unit, viewModel: LotteryViewModel) {
+    val lottery645items = viewModel.lottery645liveData.observeAsState().value ?: emptyList()
 
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -276,7 +277,7 @@ fun Lottery645(onNavigateToHome: () -> Unit) {
                 bottom.linkTo(parent.bottom, margin = pickButtonBottomMargin.dp)
             },
             onClick = {
-                lottery645items = lottery645items + LotteryHelper.get645Numbers()
+                viewModel.updateLottery645liveData(lottery645items + LotteryHelper.get645Numbers())
                 coroutineScope.launch {
                     scrollState.animateScrollToItem(lottery645items.lastIndex)
                 }
@@ -294,7 +295,7 @@ fun Lottery645(onNavigateToHome: () -> Unit) {
                         bottom.linkTo(btnPick645.bottom)
                     },
                 onClick = {
-                    lottery645items = listOf()
+                    viewModel.updateLottery645liveData(emptyList())
                 }) {
                 Icon(imageVector = Icons.Filled.Refresh, contentDescription = "refresh")
             }
