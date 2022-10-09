@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,7 +26,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -57,14 +57,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LotteryApp()
+            LotteryApp(lotteryViewModel)
         }
     }
 }
 
 @ExperimentalMaterial3Api
 @Composable
-fun LotteryApp() {
+fun LotteryApp(viewModel: LotteryViewModel) {
     Jetpackcomposematerial3Theme {
         Scaffold(
             bottomBar = {
@@ -72,7 +72,8 @@ fun LotteryApp() {
             }
         ) { innerPadding ->
             MainHomeNavHost(
-                Modifier.padding(innerPadding)
+                Modifier.padding(innerPadding),
+                viewModel = viewModel
             )
         }
     }
@@ -82,7 +83,8 @@ fun LotteryApp() {
 fun MainHomeNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = mainHomeRouteName
+    startDestination: String = mainHomeRouteName,
+    viewModel: LotteryViewModel = LotteryViewModel()
 ) {
     NavHost(
         modifier = modifier,
@@ -99,11 +101,14 @@ fun MainHomeNavHost(
             )
         }
         composable(lottery720RouteName) {
-            Lottery720(onNavigateToHome = {
-                navController.navigate(
-                    mainHomeRouteName
-                )
-            })
+            Lottery720(
+                onNavigateToHome = {
+                    navController.navigate(
+                        mainHomeRouteName
+                    )
+                },
+                viewModel = viewModel
+            )
         }
         composable(lottery645RouteName) {
             Lottery645(onNavigateToHome = {
@@ -140,7 +145,7 @@ fun MainHome(onNavigateTo720: () -> Unit, onNavigateTo645: () -> Unit) {
 }
 
 @Composable
-fun Lottery720(onNavigateToHome: () -> Unit) {
+fun Lottery720(onNavigateToHome: () -> Unit, viewModel: LotteryViewModel) {
     /**
      * remember를 사용하여 객체를 저장하는 컴포저블은 내부 상태를 생성하여 컴포저블을 스테이트풀(Stateful)로 만듭니다.
      * Lottery720 내부적으로 lottery720items 상태를 보존하고 수정하므로 스테이트풀(Stateful) 컴포저블의 한 예가 됩니다.
@@ -152,9 +157,11 @@ fun Lottery720(onNavigateToHome: () -> Unit) {
      * 재사용 가능한 컴포저블을 개발할 때는 동일한 컴포저블의 스테이트풀(Stateful) 버전과 스테이트리스(Stateless) 버전을 모두 노출해야 하는 경우가 있습니다.
      * 스테이트풀(Stateful) 버전은 상태를 염두에 두지 않는 호출자에 편리하며, 스테이트리스(Stateless) 버전은 상태를 제어하거나 끌어올려야 하는 호출자에 필요합니다.
      */
-    var lottery720items by remember {
-        mutableStateOf(listOf<LotteryHelper.Data720>())
-    }
+//    var lottery720items by remember {
+//        mutableStateOf(listOf<LotteryHelper.Data720>())
+//    }
+
+    var lottery720items = viewModel.lottery720liveData.observeAsState().value ?: emptyList()
 
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -189,7 +196,7 @@ fun Lottery720(onNavigateToHome: () -> Unit) {
                 bottom.linkTo(parent.bottom, margin = pickButtonBottomMargin.dp)
             },
             onClick = {
-                lottery720items = lottery720items + LotteryHelper.get720Numbers()
+                viewModel.updateLottery720liveData(lottery720items + LotteryHelper.get720Numbers())
                 coroutineScope.launch {
                     scrollState.animateScrollToItem(lottery720items.lastIndex)
                 }
