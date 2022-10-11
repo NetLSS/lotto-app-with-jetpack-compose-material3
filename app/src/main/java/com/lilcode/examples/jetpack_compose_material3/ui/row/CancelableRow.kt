@@ -16,20 +16,33 @@ import androidx.compose.ui.graphics.Color
 fun CancelableRow(
     modifier: Modifier = Modifier,
     verticalAlignment: Alignment.Vertical = Alignment.Top,
+    _isCanceled: Boolean = false,
+    _onUpdateIsCanceled: ((Boolean) -> Unit)? = null,
     content: @Composable RowScope.() -> Unit
 ) {
-    val (isClicked, onUpdateClicked) = remember {
-        mutableStateOf(false)
+
+    val isCanceled: Boolean
+    val onUpdateIsCanceled: (Boolean) -> Unit
+
+    if (_onUpdateIsCanceled == null ){
+        val (isClicked, onUpdateClicked) = remember {
+            mutableStateOf(false)
+        }
+        isCanceled = isClicked
+        onUpdateIsCanceled = onUpdateClicked
+    } else {
+        isCanceled = _isCanceled
+        onUpdateIsCanceled = _onUpdateIsCanceled
     }
 
     Row(
         modifier = modifier
             .clickable {
-                onUpdateClicked(!isClicked)
+                onUpdateIsCanceled(!isCanceled)
             }
             .drawWithContent {
                 drawContent()
-                if (isClicked) {
+                if (isCanceled) {
                     drawLine(
                         color = Color.Black,
                         start = Offset(0f, this.size.height / 2),

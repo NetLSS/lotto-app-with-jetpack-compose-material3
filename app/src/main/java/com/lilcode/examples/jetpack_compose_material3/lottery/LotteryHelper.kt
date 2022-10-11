@@ -1,5 +1,8 @@
 package com.lilcode.examples.jetpack_compose_material3.lottery
 
+import androidx.lifecycle.MutableLiveData
+import com.lilcode.examples.jetpack_compose_material3.common.toMutableLiveData
+
 object LotteryHelper {
     fun get720Numbers(): Data720 {
         val groups = MutableList(5) { it + 1 }
@@ -42,12 +45,14 @@ object LotteryHelper {
     }
 
     data class Data645(
-        val numbers: List<Int>
+        val numbers: List<Int>,
+        val isCanceled: MutableLiveData<Boolean> = false.toMutableLiveData()
     )
 
     data class Data720(
         val groupNumber: Int,
-        val numbers: List<Int>
+        val numbers: List<Int>,
+        val isCanceled: MutableLiveData<Boolean> = false.toMutableLiveData()
     )
 
     val defaultData720

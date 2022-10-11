@@ -340,6 +340,10 @@ fun Lottery645item(
     CancelableRow(
         modifier = Modifier
             .padding((goldenDp * 5).dp),
+        _isCanceled = data645.isCanceled.observeAsState().value ?: false,
+        _onUpdateIsCanceled = {
+            data645.isCanceled.value = it
+        },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         data645.run {
@@ -364,6 +368,10 @@ fun Lottery720item(
     CancelableRow(
         modifier = Modifier
             .padding((goldenDp * 5).dp),
+        _isCanceled = data720.isCanceled.observeAsState().value ?: false,
+        _onUpdateIsCanceled = {
+            data720.isCanceled.value = it
+        },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         data720.run {
