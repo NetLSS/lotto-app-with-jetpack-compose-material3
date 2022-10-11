@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -112,7 +113,12 @@ fun MainHomeNavHost(
                 onNavigateToHome = {
                     navController.navigate(
                         mainHomeRouteName
-                    )
+                    ) {
+                        launchSingleTop = true
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                    }
                 },
                 viewModel = viewModel
             )
@@ -122,7 +128,12 @@ fun MainHomeNavHost(
                 onNavigateToHome = {
                     navController.navigate(
                         mainHomeRouteName
-                    )
+                    ) {
+                        launchSingleTop = true
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                    }
                 },
                 viewModel = viewModel
             )
