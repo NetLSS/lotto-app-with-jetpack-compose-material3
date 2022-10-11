@@ -1,7 +1,5 @@
 package com.lilcode.examples.jetpack_compose_material3.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.lilcode.examples.jetpack_compose_material3.common.toLiveData
 import com.lilcode.examples.jetpack_compose_material3.common.toMutableLiveData
@@ -11,7 +9,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LotteryViewModel @Inject constructor() : ViewModel() {
-//    val lotteryNavHostController = NavHostController()
 
     private val _lottery720liveData = emptyList<LotteryHelper.Data720>().toMutableLiveData()
     val lottery720liveData = _lottery720liveData.toLiveData()
