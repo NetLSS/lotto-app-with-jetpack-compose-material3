@@ -1,6 +1,5 @@
 package com.lilcode.examples.jetpack_compose_material3
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,13 +14,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
@@ -39,9 +38,9 @@ import com.lilcode.examples.jetpack_compose_material3.lottery.LotteryHelper
 import com.lilcode.examples.jetpack_compose_material3.lottery.goldenDp
 import com.lilcode.examples.jetpack_compose_material3.lottery.lotteryColor
 import com.lilcode.examples.jetpack_compose_material3.lottery.pickButtonBottomMargin
-import com.lilcode.examples.jetpack_compose_material3.ui.function.BackPressHandler
 import com.lilcode.examples.jetpack_compose_material3.ui.modifier.simpleVerticalScrollbar
 import com.lilcode.examples.jetpack_compose_material3.ui.popup.PopupWindowDialog
+import com.lilcode.examples.jetpack_compose_material3.ui.row.CancelableRow
 import com.lilcode.examples.jetpack_compose_material3.ui.theme.Jetpackcomposematerial3Theme
 import com.lilcode.examples.jetpack_compose_material3.viewmodel.LotteryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -97,12 +96,12 @@ fun MainHomeNavHost(
         composable(mainHomeRouteName) {
             MainHome(
                 onNavigateTo720 = {
-                    navController.navigate(lottery720RouteName){
+                    navController.navigate(lottery720RouteName) {
                         launchSingleTop = true
                     }
                 },
                 onNavigateTo645 = {
-                    navController.navigate(lottery645RouteName){
+                    navController.navigate(lottery645RouteName) {
                         launchSingleTop = true
                     }
                 }
@@ -338,7 +337,7 @@ fun Lottery645(onNavigateToHome: () -> Unit, viewModel: LotteryViewModel) {
 fun Lottery645item(
     data645: LotteryHelper.Data645 = LotteryHelper.defaultData645
 ) {
-    Row(
+    CancelableRow(
         modifier = Modifier
             .padding((goldenDp * 5).dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -362,7 +361,7 @@ fun Lottery645item(
 fun Lottery720item(
     data720: LotteryHelper.Data720 = LotteryHelper.defaultData720
 ) {
-    Row(
+    CancelableRow(
         modifier = Modifier
             .padding((goldenDp * 5).dp),
         verticalAlignment = Alignment.CenterVertically,
