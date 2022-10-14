@@ -161,13 +161,13 @@ fun MainHome(onNavigateTo720: () -> Unit, onNavigateTo645: () -> Unit) {
         Button(
             onClick = onNavigateTo720
         ) {
-            Text(text = "연금복권 추첨하기")
+            Text(text = "연금복권")
         }
 
         Button(
             onClick = onNavigateTo645
         ) {
-            Text(text = "로또복권 추첨하기")
+            Text(text = "로또복권")
         }
     }
 }
@@ -229,7 +229,7 @@ fun Lottery720(onNavigateToHome: () -> Unit, viewModel: LotteryViewModel) {
                     scrollState.animateScrollToItem(lottery720items.lastIndex)
                 }
             }) {
-            Text(text = "연금 복권 추첨")
+            Text(text = "추첨 하기")
         }
 
         if (lottery720items.isNotEmpty()) {
@@ -307,7 +307,7 @@ fun Lottery645(onNavigateToHome: () -> Unit, viewModel: LotteryViewModel) {
                     scrollState.animateScrollToItem(lottery645items.lastIndex)
                 }
             }) {
-            Text(text = "로또 복권 추첨")
+            Text(text = "추첨 하기")
         }
 
         if (lottery645items.isNotEmpty()) {
