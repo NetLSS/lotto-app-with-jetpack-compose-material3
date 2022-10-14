@@ -27,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,10 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.lilcode.examples.jetpack_compose_material3.MainActivity.RouteName.lottery645RouteName
 import com.lilcode.examples.jetpack_compose_material3.MainActivity.RouteName.lottery720RouteName
 import com.lilcode.examples.jetpack_compose_material3.MainActivity.RouteName.mainHomeRouteName
-import com.lilcode.examples.jetpack_compose_material3.lottery.LotteryHelper
-import com.lilcode.examples.jetpack_compose_material3.lottery.goldenDp
-import com.lilcode.examples.jetpack_compose_material3.lottery.lotteryColor
-import com.lilcode.examples.jetpack_compose_material3.lottery.pickButtonBottomMargin
+import com.lilcode.examples.jetpack_compose_material3.lottery.*
 import com.lilcode.examples.jetpack_compose_material3.ui.modifier.simpleVerticalScrollbar
 import com.lilcode.examples.jetpack_compose_material3.ui.popup.PopupWindowDialog
 import com.lilcode.examples.jetpack_compose_material3.ui.row.CancelableRow
@@ -97,28 +93,17 @@ fun MainHomeNavHost(
         composable(mainHomeRouteName) {
             MainHome(
                 onNavigateTo720 = {
-                    navController.navigate(lottery720RouteName) {
-                        launchSingleTop = true
-                    }
+                    navController.onNavigateTo720()
                 },
                 onNavigateTo645 = {
-                    navController.navigate(lottery645RouteName) {
-                        launchSingleTop = true
-                    }
+                    navController.onNavigateTo645()
                 }
             )
         }
         composable(lottery720RouteName) {
             Lottery720(
                 onNavigateToHome = {
-                    navController.navigate(
-                        mainHomeRouteName
-                    ) {
-                        launchSingleTop = true
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                    }
+                    navController.onNavigateToHome()
                 },
                 viewModel = viewModel
             )
@@ -126,14 +111,7 @@ fun MainHomeNavHost(
         composable(lottery645RouteName) {
             Lottery645(
                 onNavigateToHome = {
-                    navController.navigate(
-                        mainHomeRouteName
-                    ) {
-                        launchSingleTop = true
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                    }
+                    navController.onNavigateToHome()
                 },
                 viewModel = viewModel
             )
