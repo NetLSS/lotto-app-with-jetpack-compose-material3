@@ -40,6 +40,7 @@ import com.lilcode.examples.jetpack_compose_material3.ui.theme.Jetpackcomposemat
 import com.lilcode.examples.jetpack_compose_material3.viewmodel.LotteryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlin.reflect.KClass
 
 @OptIn(ExperimentalMaterial3Api::class)
 @AndroidEntryPoint
@@ -104,9 +105,7 @@ fun MainHomeNavHost(
                     navController.onNavigateToHome()
                 },
                 items = viewModel.lottery720liveData.observeAsState().value ?: emptyList(),
-                getItem = @Composable {  item ->
-                    Lottery720item(item)
-                },
+                itemTypeClazz = LotteryHelper.Data720::class.toString(),
                 onUpdateList = { list ->
                     viewModel.updateLottery720liveData(list)
                 },
@@ -121,9 +120,7 @@ fun MainHomeNavHost(
                     navController.onNavigateToHome()
                 },
                 items = viewModel.lottery645liveData.observeAsState().value ?: emptyList(),
-                getItem = @Composable { item ->
-                    Lottery645item(item)
-                },
+                itemTypeClazz = LotteryHelper.Data645::class.toString(),
                 onUpdateList = { list ->
                     viewModel.updateLottery645liveData(list)
                 },
@@ -168,7 +165,13 @@ fun MainHome(onNavigateTo720: () -> Unit, onNavigateTo645: () -> Unit) {
 
 @Suppress("UNCHECKED_CAST")
 @Composable
-fun <T> LotteryPicker(onNavigateToHome: () -> Unit, items: List<T>, getItem: @Composable LazyItemScope.(item: T) -> Unit, onUpdateList: (List<T>)-> Unit, getNumbers: ()->T) {
+fun <T: LotteryHelper.LotteryData> LotteryPicker(
+    onNavigateToHome: () -> Unit,
+    itemTypeClazz: String,
+    items: List<T>,
+    onUpdateList: (List<T>) -> Unit,
+    getNumbers: () -> T
+) {
 
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -189,9 +192,15 @@ fun <T> LotteryPicker(onNavigateToHome: () -> Unit, items: List<T>, getItem: @Co
                 .padding(top = 64.dp, bottom = 32.dp)
                 .simpleVerticalScrollbar(state = scrollState)
         ) {
-            itemsIndexed(
-                items) { _, item ->
-                getItem(item)
+            items(items) { item ->
+                when (itemTypeClazz) {
+                    LotteryHelper.Data720::class.toString() -> {
+                        Lottery720item(item as LotteryHelper.Data720)
+                    }
+                    LotteryHelper.Data645::class.toString() -> {
+                        Lottery645item(item as LotteryHelper.Data645)
+                    }
+                }
             }
         }
 

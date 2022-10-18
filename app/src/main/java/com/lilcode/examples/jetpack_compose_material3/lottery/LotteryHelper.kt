@@ -44,16 +44,18 @@ object LotteryHelper {
         return Data645(luckyNumbers)
     }
 
+    interface LotteryData
+
     data class Data645(
         val numbers: List<Int>,
         val isCanceled: MutableLiveData<Boolean> = false.toMutableLiveData()
-    )
+    ) : LotteryData
 
     data class Data720(
         val groupNumber: Int,
         val numbers: List<Int>,
         val isCanceled: MutableLiveData<Boolean> = false.toMutableLiveData()
-    )
+    ) : LotteryData
 
     val defaultData720
         get() = Data720(1, listOf(1, 2, 3, 4, 5, 6))
