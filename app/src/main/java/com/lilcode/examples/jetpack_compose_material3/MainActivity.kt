@@ -6,9 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -101,19 +99,37 @@ fun MainHomeNavHost(
             )
         }
         composable(lottery720RouteName) {
-            Lottery720(
+            LotteryPicker(
                 onNavigateToHome = {
                     navController.onNavigateToHome()
                 },
-                viewModel = viewModel
+                items = viewModel.lottery720liveData.observeAsState().value ?: emptyList(),
+                getItem = @Composable {  item ->
+                    Lottery720item(item)
+                },
+                onUpdateList = { list ->
+                    viewModel.updateLottery720liveData(list)
+                },
+                getNumbers = {
+                    LotteryHelper.get720Numbers()
+                }
             )
         }
         composable(lottery645RouteName) {
-            Lottery645(
+            LotteryPicker(
                 onNavigateToHome = {
                     navController.onNavigateToHome()
                 },
-                viewModel = viewModel
+                items = viewModel.lottery645liveData.observeAsState().value ?: emptyList(),
+                getItem = @Composable { item ->
+                    Lottery645item(item)
+                },
+                onUpdateList = { list ->
+                    viewModel.updateLottery645liveData(list)
+                },
+                getNumbers = {
+                    LotteryHelper.get645Numbers()
+                }
             )
         }
         /*...*/
@@ -149,6 +165,83 @@ fun MainHome(onNavigateTo720: () -> Unit, onNavigateTo645: () -> Unit) {
         }
     }
 }
+
+@Suppress("UNCHECKED_CAST")
+@Composable
+fun <T> LotteryPicker(onNavigateToHome: () -> Unit, items: List<T>, getItem: @Composable LazyItemScope.(item: T) -> Unit, onUpdateList: (List<T>)-> Unit, getNumbers: ()->T) {
+
+    val scrollState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    ConstraintLayout(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        val (lc720List, btnPick720, btnRefresh720, btnGoHome) = createRefs()
+        LazyColumn(
+            state = scrollState,
+            modifier = Modifier
+                .constrainAs(lc720List) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(btnPick720.top)
+                }
+                .padding(top = 64.dp, bottom = 32.dp)
+                .simpleVerticalScrollbar(state = scrollState)
+        ) {
+            itemsIndexed(
+                items) { _, item ->
+                getItem(item)
+            }
+        }
+
+        Button(
+            modifier = Modifier.constrainAs(btnPick720) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom, margin = pickButtonBottomMargin.dp)
+            },
+            onClick = {
+                onUpdateList(items + (getNumbers as T))
+                coroutineScope.launch {
+                    scrollState.animateScrollToItem(items.lastIndex)
+                }
+            }) {
+            Text(text = "추첨 하기")
+        }
+
+        if (items.isNotEmpty()) {
+            Button(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .constrainAs(btnRefresh720) {
+                        start.linkTo(btnPick720.end)
+                        top.linkTo(btnPick720.top)
+                        bottom.linkTo(btnPick720.bottom)
+                    },
+                onClick = {
+                    onUpdateList(emptyList())
+                }) {
+                Icon(imageVector = Icons.Filled.Refresh, contentDescription = "refresh")
+            }
+        }
+
+        Button(
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .constrainAs(btnGoHome) {
+                    end.linkTo(btnPick720.start)
+                    top.linkTo(btnPick720.top)
+                    bottom.linkTo(btnPick720.bottom)
+                },
+            onClick = onNavigateToHome
+        ) {
+            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back to home")
+        }
+
+    }
+}
+
 
 @Composable
 fun Lottery720(onNavigateToHome: () -> Unit, viewModel: LotteryViewModel) {
