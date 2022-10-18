@@ -100,33 +100,19 @@ fun MainHomeNavHost(
             )
         }
         composable(lottery720RouteName) {
-            LotteryPicker(
+            Lottery720(
                 onNavigateToHome = {
                     navController.onNavigateToHome()
                 },
-                items = viewModel.lottery720liveData.observeAsState().value ?: emptyList(),
-                itemTypeClazz = LotteryHelper.Data720::class.toString(),
-                onUpdateList = { list ->
-                    viewModel.updateLottery720liveData(list)
-                },
-                getNumbers = {
-                    LotteryHelper.get720Numbers()
-                }
+                viewModel = viewModel
             )
         }
         composable(lottery645RouteName) {
-            LotteryPicker(
+            Lottery645(
                 onNavigateToHome = {
                     navController.onNavigateToHome()
                 },
-                items = viewModel.lottery645liveData.observeAsState().value ?: emptyList(),
-                itemTypeClazz = LotteryHelper.Data645::class.toString(),
-                onUpdateList = { list ->
-                    viewModel.updateLottery645liveData(list)
-                },
-                getNumbers = {
-                    LotteryHelper.get645Numbers()
-                }
+                viewModel = viewModel
             )
         }
         /*...*/
